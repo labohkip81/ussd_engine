@@ -129,7 +129,7 @@ class DynamoDb(JourneyStore):
     def _get(self, name, version, screen_name, **kwargs):
         screen_kwarg = {}
         if screen_name is not None:
-            screen_kwarg["ProjectionExpression"] = f'journey.{screen_name}'
+            screen_kwarg["ProjectionExpression"] = "journey.{0}".format(screen_name)
 
         if version is None:
             response = self.table.query(
