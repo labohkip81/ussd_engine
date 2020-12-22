@@ -129,7 +129,7 @@ class DynamoDb(JourneyStore):
     def _get(self, name, version, screen_name, **kwargs):
         screen_kwarg = {}
         if screen_name is not None:
-            screen_kwarg["ProjectionExpression"] = screen_name
+            screen_kwarg["ProjectionExpression"] = f'journey.{screen_name}'
 
         if version is None:
             response = self.table.query(
@@ -148,11 +148,7 @@ class DynamoDb(JourneyStore):
             item = response.get('Item')
 
         if item:
-            if item.get(self.hash_key):
-                del item[self.hash_key]
-            if item.get(self.sort_key):
-                del item[self.sort_key]
-
+            item = item.get('journey', {})
             if screen_name:
                 item = item.get(screen_name)
         return item or None
@@ -161,9 +157,7 @@ class DynamoDb(JourneyStore):
         results = {}
         for i in self._query(name):
             version = i[self.sort_key].split("#")[1]
-            del i[self.hash_key]
-            del i[self.sort_key]
-            results[version] = i
+            results[version] = i.get('journey', {})
         return results
 
     def _query(self, name, **kwargs):
@@ -179,7 +173,7 @@ class DynamoDb(JourneyStore):
             self.hash_key: self.user,
             self.sort_key: self._generate_sort_key(name, version)
         }
-        item.update(journey)
+        item.update({'journey': journey})
 
         response = self.table.put_item(
             Item=item
@@ -217,9 +211,7 @@ class DynamoDb(JourneyStore):
             if not results.get(name):
                 results[name] = {}
 
-            del i[self.hash_key]
-            del i[self.sort_key]
-            results[name][version] = i
+            results[name][version] = i.get('journey', {})
 
         return results
 
