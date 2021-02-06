@@ -9,7 +9,8 @@ screen_two:
   type: update_session_screen
   next_screen: screen_three
   values_to_update:
-    - expression: "{{True}}"
+    - expression: 1
+      value: 1
 
 # missing attributes in session update
 screen_three:

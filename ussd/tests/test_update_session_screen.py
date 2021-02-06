@@ -10,7 +10,6 @@ class TestUpdateSessionScreen(UssdTestCase.BaseUssdTestCase):
         screen_two=dict(
             values_to_update={0: dict(
                 key=['This field is required.'],
-                value=['This field is required.']
             )}
         ),
         screen_three=dict(
