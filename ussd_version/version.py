@@ -1,2 +1,2 @@
 # Version is filled during publish or deploy
-VERSION = '0.1'
+VERSION = '1.0.0'
